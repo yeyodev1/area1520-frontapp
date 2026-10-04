@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://area1520.bakano.ec/sitemap.xml
