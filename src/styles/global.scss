@@ -12,15 +12,18 @@
 :root {
   --font-display: #{$font-display};
   --font-body: #{$font-principal};
-  --bg: #{$paper};
-  --surface: #{$surface};
-  --text: #{$ink};
-  --text-soft: #{$ink-soft};
+  --font-mono: #{$font-mono};
+  --bg: #{$night};
+  --surface: #{$steel};
+  --text: #{$bone};
+  --text-soft: #{$bone-soft};
   --accent: #{$accent};
   --border: #{$line};
 }
 
 html {
+  color-scheme: dark;
+  background: $night;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 
@@ -30,7 +33,7 @@ html {
 }
 
 body {
-  background-color: var(--bg);
+  background-color: $night;
   color: var(--text);
   font-family: $font-principal;
   font-size: $text-base;
@@ -47,8 +50,9 @@ h2,
 h3,
 h4 {
   font-family: $font-display;
-  font-weight: 500;
-  line-height: 1.1;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -80,8 +84,8 @@ select,
 textarea {
   font: inherit;
   font-size: 0.95rem;
-  color: $ink;
-  background: $surface;
+  color: $bone;
+  background: $iron;
   border: 1px solid $line;
   border-radius: $radius-sm;
   padding: 0.7rem 0.9rem;
@@ -93,14 +97,21 @@ textarea {
 
   &:focus {
     border-color: $accent;
-    box-shadow: 0 0 0 3px rgba($accent, 0.15);
+    box-shadow: 0 0 0 3px rgba($accent, 0.2);
+  }
+
+  &::placeholder {
+    color: $bone-muted;
   }
 }
 
 label {
-  font-size: 0.82rem;
+  font-family: $font-mono;
+  font-size: 0.72rem;
   font-weight: 500;
-  color: $ink-soft;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $bone-soft;
   display: block;
   margin-bottom: 0.35rem;
 }
@@ -111,8 +122,8 @@ label {
 }
 
 ::selection {
-  background: $accent-soft;
-  color: $ink;
+  background: $accent;
+  color: $white;
 }
 
 .btn {
@@ -121,46 +132,55 @@ label {
   justify-content: center;
   gap: 0.5rem;
   font-family: $font-principal;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.85rem 1.8rem;
-  border-radius: $radius-pill;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1rem 1.7rem;
+  border-radius: $radius-sm;
+  min-height: 48px;
   @include transition;
 
   &--primary {
     background: $accent;
-    color: $surface;
+    color: $white;
 
     &:hover {
-      background: $accent-deep;
-      transform: translateY(-1px);
+      background: $accent-bright;
+      box-shadow: $glow-accent;
+      transform: translateY(-2px);
     }
   }
 
   &--dark {
-    background: $ink;
-    color: $surface;
+    background: $bone;
+    color: $night;
 
     &:hover {
-      background: $accent-deep;
-      transform: translateY(-1px);
+      background: $white;
+      transform: translateY(-2px);
     }
   }
 
   &--ghost {
-    border: 1px solid $ink;
-    color: $ink;
+    border: 1px solid $line-strong;
+    color: $bone;
 
     &:hover {
-      background: $ink;
-      color: $surface;
+      border-color: $bone;
+      background: rgba($white, 0.06);
     }
   }
 
   &--danger {
     background: $danger;
-    color: $surface;
+    color: $white;
+  }
+
+  &--sm {
+    padding: 0.6rem 1rem;
+    min-height: 38px;
+    font-size: 0.72rem;
   }
 
   &:disabled {
@@ -218,5 +238,36 @@ label {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+// Grano sutil sobre todo el sitio: quita lo "plano digital" al fondo oscuro.
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+// Reveal al hacer scroll (lo activa la directiva v-reveal)
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s $ease,
+    transform 0.8s $ease;
+  transition-delay: var(--reveal-delay, 0ms);
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @include reduced-motion {
+    opacity: 1;
+    transform: none;
   }
 }
