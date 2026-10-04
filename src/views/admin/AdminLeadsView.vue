@@ -144,7 +144,7 @@ onMounted(load)
     }
 
     &--actions {
-      flex: 0 0 calc(8.5rem + 2 * 40px + 1rem);
+      flex: 0 0 15.5rem;
     }
   }
 
