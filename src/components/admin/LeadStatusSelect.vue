@@ -30,7 +30,7 @@ $status-colors: (
 
 .status-select {
   width: auto;
-  min-width: 8.5rem;
+  min-width: 9.5rem;
   min-height: 38px;
   padding: 0.4rem 2rem 0.4rem 0.8rem;
   border-radius: $radius-pill;
