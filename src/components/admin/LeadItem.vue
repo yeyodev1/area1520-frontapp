@@ -119,6 +119,11 @@ watch(
     min-width: 0;
     font-size: $text-sm;
 
+    // Va antes de los modificadores para que estos ganen en desktop.
+    @include from('lg') {
+      flex: 1 1 0;
+    }
+
     i {
       color: $bone-muted;
       width: 1rem;
@@ -144,13 +149,10 @@ watch(
       flex: 1 1 100%;
       @include flex(row, center, flex-start, 0.5rem);
 
+      // Mismo ancho que la columna "Estado" de la cabecera de la vista.
       @include from('lg') {
-        flex: 0 0 auto;
+        flex: 0 0 15.5rem;
       }
-    }
-
-    @include from('lg') {
-      flex: 1 1 0;
     }
   }
 
