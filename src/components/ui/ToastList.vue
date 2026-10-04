@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { useToastStore } from '@/stores/toast'
 
 const toastStore = useToastStore()
+const route = useRoute()
 
 const icons: Record<string, string> = {
   success: 'fa-solid fa-circle-check',
@@ -12,7 +14,11 @@ const icons: Record<string, string> = {
 
 <template>
   <Teleport to="body">
-    <div class="toasts" aria-live="polite">
+    <div
+      class="toasts"
+      :class="{ 'toasts--admin': route.meta.layout === 'admin' }"
+      aria-live="polite"
+    >
       <TransitionGroup name="toast">
         <div
           v-for="toast in toastStore.toasts"
@@ -37,6 +43,15 @@ const icons: Record<string, string> = {
   @include flex(column, stretch, flex-start, 0.6rem);
   z-index: 300;
   max-width: min(360px, calc(100vw - 2.8rem));
+
+  // En móvil el panel tiene barra inferior fija: el toast sube para no taparla.
+  &--admin {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+
+    @include from('md') {
+      bottom: 1.4rem;
+    }
+  }
 
   &__item {
     @include flex(row, center, flex-start, 0.7rem);
