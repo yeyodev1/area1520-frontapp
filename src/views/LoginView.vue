@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useToastStore } from '@/stores/toast'
+import BrandMark from '@/components/brand/BrandMark.vue'
 import type { ApiError } from '@/types'
 
 const route = useRoute()
@@ -21,7 +22,8 @@ async function submit() {
   try {
     const user = await userStore.login(email.value.trim(), password.value)
     toast.success(`Hola, ${user.name || user.email}`)
-    const next = typeof route.query.next === 'string' ? route.query.next : '/cuenta'
+    // Solo rutas internas: un ?next= externo no debe sacar a nadie del sitio.
+    const next = typeof route.query.next === 'string' && route.query.next.startsWith('/') ? route.query.next : '/admin'
     router.replace(next)
   } catch (e) {
     error.value = (e as ApiError).message
@@ -34,7 +36,8 @@ async function submit() {
 <template>
   <section class="login">
     <form class="login__card" @submit.prevent="submit">
-      <p class="login__eyebrow">Acceso</p>
+      <BrandMark :size="52" class="login__mark" />
+      <p class="login__eyebrow">Panel del box</p>
       <h1 class="login__title">Ingresar</h1>
 
       <div class="login__field">
@@ -48,7 +51,7 @@ async function submit() {
       </div>
 
       <Transition name="rise">
-        <p v-if="error" class="login__error">
+        <p v-if="error" class="login__error" role="alert">
           <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
         </p>
       </Transition>
@@ -63,16 +66,28 @@ async function submit() {
 
 <style scoped lang="scss">
 .login {
-  @include container(480px);
+  @include container(460px);
   @include flex(column, stretch, center);
   flex: 1;
-  padding-block: $space-xl;
+  min-height: 100svh;
+  padding-block: calc(76px + #{$space-lg}) $space-xl;
 
   &__card {
-    @include card;
-    @include flex(column, stretch, flex-start, 1rem);
-    padding: 2.2rem 2rem;
-    box-shadow: $shadow-sm;
+    @include flex(column, stretch, flex-start, 1.1rem);
+    padding: 2.2rem 1.6rem;
+    background: $steel;
+    border: 1px solid $line;
+    border-top: 3px solid $accent;
+    border-radius: $radius-md;
+    box-shadow: $shadow-lg;
+
+    @include from('sm') {
+      padding: 2.6rem 2.2rem;
+    }
+  }
+
+  &__mark {
+    margin-bottom: 0.4rem;
   }
 
   &__eyebrow {
@@ -80,8 +95,12 @@ async function submit() {
   }
 
   &__title {
-    @include display($display-sm, 600);
+    @include display($display-md);
     margin-bottom: 0.4rem;
+  }
+
+  &__field input {
+    min-height: 48px;
   }
 
   &__error {
