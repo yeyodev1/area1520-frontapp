@@ -8,8 +8,9 @@ import type { Album } from '@/types'
 const props = defineProps<{ album: Album }>()
 const emit = defineEmits<{ publish: []; edit: []; remove: [] }>()
 
+// En el admin el API ya separa: photoCount son las visibles, hiddenCount las ocultas.
 const hidden = computed(() => props.album.hiddenCount ?? 0)
-const visible = computed(() => Math.max(0, props.album.photoCount - hidden.value))
+const visible = computed(() => props.album.photoCount)
 </script>
 
 <template>
